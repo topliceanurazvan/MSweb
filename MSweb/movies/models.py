@@ -25,7 +25,7 @@ class MovieListItem(models.Model):
     movie_list = models.ForeignKey(MovieList, on_delete=models.CASCADE, related_name="movies")
     movie_title = models.CharField(max_length=100)
     
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(blank=True)
 
     imdb_id = models.CharField(max_length=50)
     poster = models.URLField()
@@ -40,6 +40,7 @@ def pre_save_movie_item(sender, instance, *args, **kwargs):
 
 class MovieRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="ratings")
+    movie = models.ForeignKey(MovieListItem, on_delete=models.CASCADE, blank=True, null=True)
 
     imdb_id = models.CharField(max_length=50)
     rating = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(10)])

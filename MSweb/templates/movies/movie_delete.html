@@ -3,13 +3,29 @@
 {% load static %}
 
 {% block title %}
-    Random
+    {{object.movie_title}}
 {% endblock title %}
 
 {% block content %}
-    <div class="section">
+<div class="section">
         <div class="container">
-            
+            <div class="col xl8 offset-xl2 s12">
+                <div class="card-panel" style="padding: 25px 80px 25px 80px;">
+                    <h5 class="center">Are you sure you want to delete this movie?</h5>
+                    <br/>
+                    <div class="row">
+                        <div class="col s3 offset-s3">
+                            <form method="post">
+                                {% csrf_token %}
+                                <button class="btn deep-orange" type="submit">Delete</button>
+                            </form>
+                        </div>
+                        <div class="col s3 offset-s1">
+                            <a href="{% url 'movie_list_detail' slug=slug %}" class="btn deep-orange">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-{% endblock content}
+{% endblock content %} 

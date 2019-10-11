@@ -3,10 +3,12 @@ import omdb
 API_KEY = '202005fe'
 omdb.set_default('apikey', API_KEY)
 
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, RedirectView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from itertools import chain
 
 from .models import MovieList, MovieListItem, MovieRating
 
@@ -77,6 +79,16 @@ class MovieListDeleteView(DeleteView):
     template_name = "movies/movie_list_delete.html"
     model = MovieList
 
+    def get_success_url(self, **kwargs):
+         return reverse_lazy('user_movie_list')
+
+    def get_object(self):
+        print (self.kwargs['slug'])
+        return get_object_or_404(MovieList, slug=self.kwargs['slug'])
+    
+    def delete(self, request, *args, **kwargs):
+        return super(MovieListDeleteView, self).delete(request, *args, **kwargs)
+
 class MovieAddView(RedirectView):
     
     def get_redirect_url(self, *args, **kwargs):
@@ -102,6 +114,7 @@ class MovieRatingView(CreateView):
     def form_valid(self, form):
         movie_rating = form.save(commit=False)
         movie_rating.user = self.request.user
+        movie_rating.movie = get_object_or_404(MovieListItem, slug=self.kwargs['slug_item'])
         movie_rating.imdb_id = self.request.GET.get('imdb_id')
         movie_rating.save()
         return super(MovieRatingView, self).form_valid(form)
@@ -114,13 +127,26 @@ class MovieRatingUpdateView(UpdateView):
     def get_success_url(self, **kwargs):
         return reverse_lazy('movie_list_detail', kwargs = {'slug': self.kwargs['slug']})
 
+    def get_object(self):
+        imdbID = self.request.GET.get('imdb_id')
+        return get_object_or_404(MovieRating, imdb_id = imdbID)
+
 
 class MovieDeleteView(DeleteView):
-    template_name = "movies/movie_rating_create_update.html"
+    template_name = "movies/movie_delete.html"
     model = MovieListItem
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['slug'] = self.kwargs['slug']
+
+        return context
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('movie_list_detail', kwargs = {'slug': self.kwargs['slug']})
+        
+    def get_object(self):
+        return get_object_or_404(MovieListItem, slug=self.kwargs['slug_item'])
 
     def delete(self, request, *args, **kwargs):
         return super(MovieDeleteView, self).delete(request, *args, **kwargs)
