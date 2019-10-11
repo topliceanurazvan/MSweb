@@ -1,0 +1,73 @@
+{% extends "base/template.html" %}
+
+{% block content %}
+
+<div class="section"></div>
+
+{% load widget_tweaks %}
+
+<center>
+  <h5 class="deep-orange-text text-darken-2" style="font-size: 2.5rem;">Log In to your account</h5>
+  <div class="section"></div>
+
+  <div class="row container">
+    <div class="z-depth-1 grey lighten-4 col xl8 offset-xl2 s12" style="display: inline-block; padding: 10px 60px 15px 60px; border: 1px solid #EEE;">
+
+      <form class="col s12" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+
+        <div class="section"></div>
+
+        {{ form.non_field_errors }}
+
+        <div class='row'>
+          <div class='input-field col s12'>
+            {{ form.login|add_class:"validate" }}
+            {% for error in form.login.errors %}
+              <span class="left red-text" >* {{ error }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='input-field col s12'>
+            {{ form.password|add_class:"validate" }}
+            {% for error in form.password.errors %}
+              <span class="left red-text" >* {{ error }}</span>
+            {% endfor %}
+          </div>
+          <label style='float: right;'>
+            <a class='deep-orange-text text-darken-2' href="{% url 'account_reset_password' %}"><b>Forgot Password?</b></a>
+          </label>
+        </div>
+
+        <p>
+          <label>
+            {{ form.remember }}
+            <span>Remember me</span>
+          </label>
+        </p>
+
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+
+        <center>
+          <div class='row'>
+            <button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect deep-orange darken-1' style="font-size: 1rem">Sign In</button>
+          </div>
+        </center>
+
+      </form>
+
+    </div>
+  </div>
+    
+
+  <a href="{{ signup_url }}" class="deep-orange-text">Not registered? Click here to sign up</a>
+</center>
+
+<div class="section"></div>
+<div class="section"></div>
+
+{% endblock content %}

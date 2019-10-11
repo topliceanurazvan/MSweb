@@ -1,0 +1,58 @@
+{% extends 'base/template.html' %}
+
+{% load static %}
+
+{% block title %}
+    Search movie
+{% endblock title %}
+
+{% block content %} 
+
+    <div class="section">
+        <div class="container">
+            <form>
+                <div class="row">
+                    <div class="input-field col s6 offset-s3">
+                        <input id="search_movie" type="text" class="validate" name="movie_title">
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+            {% for item in omdb %}
+                <div class="col s4">
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="card" style="height: 28rem;">
+                                <div class="card-image">
+                                    {% if item.poster != "N/A" %}
+                                        <a href="https://www.imdb.com/title/{{item.imdb_id}}"><img height="250" src=" {{item.poster}}" alt=""></a>
+                                    {% else %}
+                                        <a href="https://www.imdb.com/title/{{item.imdb_id}}"><img height="250" src="{% static 'img/img_not_found.png' %}" alt=""></a>
+                                    {% endif %}
+                                    <a href="{% url 'movie_list_add' slug=slug %}?imdb_id={{ item.imdb_id }}" class="btn-floating btn-small halfway-fab deep-orange"><i class="material-icons">add</i></a>
+                                </div>
+                                <div class="card-content">
+                                    <span class="card-title center">{{item.title}}</span>
+                                    <p style="font-size: 1.3rem" class="center">{{item.year}}</p>
+                                    <div class="row" style="margin: 1rem 0 0 0;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+    var url = new URL(window.location.href);
+    document.getElementById("search_movie").placeholder = url.searchParams.get('movie_title');
+    
+</script>
+{% endblock scripts %}

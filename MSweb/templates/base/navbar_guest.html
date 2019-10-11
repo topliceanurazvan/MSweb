@@ -1,0 +1,6 @@
+{% extends "base/navbar_common.html" %}
+
+{% block buttons %}
+  <li><a href="{% url 'account_login' %}"><i class="material-icons left">person</i>Log In</a></li>
+  <li><a href="{% url 'account_signup' %}"><i class="material-icons left">create</i>Sign up</a></li>
+{% endblock buttons %}

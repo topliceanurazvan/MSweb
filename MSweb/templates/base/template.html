@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Compiled and minified CSS Materialize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+    <!-- Material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'base/style.css' %}">
+
+    <title>{% block title %}Titlu default{% endblock title %}</title>
+</head>
+<body>
+    <header>
+            {% if user.is_authenticated %}
+                {% include "base/navbar_user.html" %}
+            {% else %}
+                {% include "base/navbar_guest.html" %}
+            {% endif %}
+    </header>
+        
+    <main>
+        {% block content %}{% endblock content %}
+    </main>
+
+        {% include "base/footer.html" %}
+    
+    {% block scripts %}
+    {% endblock scripts %}    
+    
+</body>
+</html>

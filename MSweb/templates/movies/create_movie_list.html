@@ -1,0 +1,48 @@
+{% extends 'base/template.html' %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+
+{% block title %}
+    Create list
+{% endblock title %}
+
+{% block content %}
+<div class="section"></div>
+<div class="container">
+    <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }} 
+        <!-- TODO : Fix to display an error when you enter the same name again-->
+
+        <div class="row">
+            <div class="input-field col s12">
+                {{ form.title }}
+                <label for="{{ form.title.id_for_label }}">Event name</label>
+            </div>
+            {% for error in form.name.errors %}
+                <span class="left red-text" >* {{ error }}</span>
+            {% endfor %}
+        </div>
+        
+        <div class='row'>
+            <div class='input-field col s12'>
+                {{ form.description|add_class:"materialize-textarea" }}
+                <label for='{{ form.description.id_for_label }}'>{{ form.description.label }}</label>
+            </div>
+            {% for error in form.description.errors %}
+                <span class="left red-text" >* {{ error }}</span>
+            {% endfor %}
+        </div>
+        
+        <div class="row center">
+            <input class="btn deep-orange" type="submit" value="Submit">
+        </div>
+        
+    </form>
+</div>
+
+    
+{% endblock content %}q

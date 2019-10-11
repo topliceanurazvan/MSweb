@@ -1,0 +1,27 @@
+{% extends 'base/template.html' %}
+
+{% load static %}
+
+{% block title %}
+    Search movie
+{% endblock title %}
+
+{% block content %} 
+    <div class="section">
+        <div class="container">
+            <form>
+                <div class="row">
+                    <div class="input-field col s6 offset-s3">
+                        <input id="search_input" type="text" class="validate" name="movie_title">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    console.log(window.location.href);
+</script>
+{% endblock scripts %}

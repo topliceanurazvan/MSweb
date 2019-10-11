@@ -1,0 +1,38 @@
+{% extends "base/template.html" %}
+
+{% block content %}
+
+  <div class="section"></div>
+
+  <div class="newcontainer">
+
+    <div class="section row">
+
+      <div class="col xl8 offset-xl2 s12">
+        <div class="card-panel" style="padding: 25px 80px 25px 80px;">
+        
+        <center>
+          <h5>Are you sure you want to sign out?</h5>
+          <br />
+
+          <form method="post" action="{% url 'account_logout' %}">
+            {% csrf_token %}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+            {% endif %}
+            <button class="btn deep-orange" type="submit">Sign Out</button>
+          </form>
+
+        </center>
+        
+      
+        </div>
+
+      </div>
+        
+    </div>
+
+  </div>
+
+
+{% endblock content %}

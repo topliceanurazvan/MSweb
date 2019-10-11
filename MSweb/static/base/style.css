@@ -1,0 +1,32 @@
+.nav-wrapper .brand-logo{
+    padding-left: 3rem;
+}
+
+.newcontainer {
+    width: 70%;
+    margin: 0 auto;
+}
+
+body{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.home-img {
+    height: 50vh;
+    width: 100%;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+footer div {
+    padding-bottom: 1rem;
+}
+
+.list_title {
+    font-size: 1.3rem;
+    font-weight: 500;
+}

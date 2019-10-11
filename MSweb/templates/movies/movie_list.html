@@ -1,0 +1,29 @@
+{% extends 'base/template.html' %}
+
+{% load static %}
+
+{% block title %}
+    Public list
+{% endblock title %}
+
+{% block content %}
+    <div class="section"></div>
+    <div class="container">
+        <div class="row">
+            <h4 class="center deep-orange-text text-darken-2">Public list</h4>
+        </div>
+        <div class="card-panel"> 
+            <div class="row">
+                <div class="col s6 center list_title">Name</div>
+                <div class="col s6 center list_title">Username</div>
+            </div>
+            <hr><br>
+            {% for list in object_list %}
+            <div class="row">
+                <div class="col s6 center"><a href="">{{ list.title }}</a></div>
+                <div class="col s6 center">{{ list.user }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
