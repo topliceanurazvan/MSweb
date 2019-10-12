@@ -9,30 +9,25 @@ Lista de filme
 {% block content %}
     <div class="row valign-wrapper" style="height: 10vh; ">
         <div class="col s12 center-align fs-title" style="margin-top: 5rem; font-size: 2rem;">
-            Top 5 movies this week
+            Top 3 movies this week
         </div>
     </div>
-    <div class="valign-wrapper" style="height: 76vh;">
-        <div>
-            <div class="row">
-                <div class="col s1"></div>
-                {% for i in 'iiiii' %}
-                    <div class="col s2">
-                        <img src="{% static 'img/background.gif' %}" class="home-img">
+    <div style="height: 76vh;">
+            <div class="row" >
+                <div class="col s12">
+                {% for movie in top_movies %}
+                    <div class="col s4 center">
+                        <img src="{{movie.poster}}">
                         <div class="row">
-                            <div class="col s12 center" style="font-size: 1.5rem;">
-                                Avenger: spiderman homecoming
-                            </div>
+                            <div class="col s12" style="font-size: 1.5rem;">{{movie.movie_title}}</div>
                         </div>
                         <div class="row">
-                            <div class="col s12 center">
-                                Rating: 8.6
-                            </div>
+                            <div class="col s12 center">Rating: {{movie.rating}}</div>
                         </div>
                     </div>
                 {% endfor %}
+                </div>
             </div>
-        </div>
     </div>
     <!-- <a href="{% url 'movie_list_create' %}">Add movie to list</a>
 

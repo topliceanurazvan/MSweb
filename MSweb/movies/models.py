@@ -24,19 +24,13 @@ def pre_save_movie_list(sender, instance, *args, **kwargs):
 class MovieListItem(models.Model):
     movie_list = models.ForeignKey(MovieList, on_delete=models.CASCADE, related_name="movies")
     movie_title = models.CharField(max_length=100)
-    
-    slug = models.SlugField(blank=True)
 
     imdb_id = models.CharField(max_length=50)
     poster = models.URLField()
     plot = models.CharField(max_length=300)
 
     def __str__(self):
-        return "Title: {0}".format(self.movie_title)
-
-@receiver(pre_save, sender=MovieListItem)
-def pre_save_movie_item(sender, instance, *args, **kwargs):
-    instance.slug = slugify(instance.movie_title)
+        return "Title: {0}, {1}".format(self.movie_title, self.movie_list)
 
 class MovieRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="ratings")
@@ -44,6 +38,9 @@ class MovieRating(models.Model):
 
     imdb_id = models.CharField(max_length=50)
     rating = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(10)])
+
+    class Meta:
+        unique_together = ("user", "imdb_id")
 
     def __str__(self):
         return "User: {0}, imdb_id: {1}".format(self.user, self.imdb_id)

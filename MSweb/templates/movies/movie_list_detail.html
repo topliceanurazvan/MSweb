@@ -23,7 +23,7 @@
                             <div class="card" style="height: 32rem;">
                                 <div class="card-image">
                                     <img height="200" src="{{movie.poster}}" alt="">
-                                    <a href="{% url 'movie_delete' slug=movielist.slug slug_item=movie.slug %}" class="btn-floating btn-small halfway-fab deep-orange"><i class="material-icons">clear</i></a>
+                                    <a href="{% url 'movie_delete' slug=movielist.slug pk=movie.pk %}" class="btn-floating btn-small halfway-fab deep-orange"><i class="material-icons">clear</i></a>
                                 </div>
                                 <div class="card-content">
                                     <span class="card-title center">{{movie.movie_title}}</span>
@@ -31,9 +31,9 @@
                                     <div class="row" style="margin: 1rem 0 0 0;">
                                         <div class="col s12 center">
                                             {% if movie.rating == None %}
-                                                <a href="{% url 'movie_rating' slug=movielist.slug slug_item=movie.slug %}?imdb_id={{movie.imdb_id}}" class="btn btn-small deep-orange darken-4">Give a rating</a>
+                                                <a href="{% url 'movie_rating' slug=movielist.slug pk=movie.pk %}?imdb_id={{movie.imdb_id}}" class="btn btn-small deep-orange darken-4">Give a rating</a>
                                             {% else %}
-                                                <p>Rating: {{ movie.rating }} <a href="{% url 'movie_update_rating' slug=movielist.slug slug_item=movie.slug %}?imdb_id={{movie.imdb_id}}"><i class="material-icons">edit</i></a>  
+                                                <p>Rating: {{ movie.rating }} <a href="{% url 'movie_update_rating' slug=movielist.slug pk=movie.pk %}?imdb_id={{movie.imdb_id}}"><i class="material-icons">edit</i></a>  
                                             {% endif %}
                                         </div>
                                     </div>

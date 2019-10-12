@@ -3,18 +3,30 @@ import omdb
 API_KEY = '202005fe'
 omdb.set_default('apikey', API_KEY)
 
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView, CreateView, ListView, DetailView, UpdateView, DeleteView, RedirectView
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from itertools import chain
+from django.db.models import Count, Avg
 
 from .models import MovieList, MovieListItem, MovieRating
 
 class HomepageView(TemplateView):
     template_name = "movies/homepage.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        results = MovieRating.objects.values('imdb_id').annotate(avg_rating=Avg('rating')).order_by('-avg_rating')
+        print(results)
+        top_movies = []
+        for item in results[:3]:
+            movie = MovieListItem.objects.filter(imdb_id = item["imdb_id"]).first()
+            movie.rating = item['avg_rating']
+            top_movies.append(movie)
+        context['top_movies'] = top_movies
+        return context
+   
 class PublicMovieListView(ListView):
     template_name = "movies/movie_list.html"
     model = MovieList
@@ -46,7 +58,10 @@ class MovieListDetailView(ListView):
     model = MovieListItem
 
     def get_queryset(self, *args, **kwargs):
-        return MovieList.objects.get(slug = self.kwargs['slug']).movies.all() #show only current list movies
+        queryset = MovieList.objects.get(slug = self.kwargs['slug']).movies.all()#show only current list movies
+        
+        return queryset
+        
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -55,7 +70,7 @@ class MovieListDetailView(ListView):
         movie_list = context['object_list']
         for movie in movie_list:
             try:
-                object_rating = MovieRating.objects.get(imdb_id=movie.imdb_id)
+                object_rating = MovieRating.objects.get(imdb_id=movie.imdb_id, user=self.request.user)
                 movie.rating = object_rating.rating
             except MovieRating.DoesNotExist:
                 object_rating = None
@@ -114,7 +129,7 @@ class MovieRatingView(CreateView):
     def form_valid(self, form):
         movie_rating = form.save(commit=False)
         movie_rating.user = self.request.user
-        movie_rating.movie = get_object_or_404(MovieListItem, slug=self.kwargs['slug_item'])
+        movie_rating.movie = get_object_or_404(MovieListItem, pk=self.kwargs['pk'])
         movie_rating.imdb_id = self.request.GET.get('imdb_id')
         movie_rating.save()
         return super(MovieRatingView, self).form_valid(form)
@@ -146,7 +161,7 @@ class MovieDeleteView(DeleteView):
         return reverse_lazy('movie_list_detail', kwargs = {'slug': self.kwargs['slug']})
         
     def get_object(self):
-        return get_object_or_404(MovieListItem, slug=self.kwargs['slug_item'])
+        return get_object_or_404(MovieListItem, pk=self.kwargs['pk'])
 
     def delete(self, request, *args, **kwargs):
         return super(MovieDeleteView, self).delete(request, *args, **kwargs)

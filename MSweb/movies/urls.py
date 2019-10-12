@@ -25,9 +25,9 @@ urlpatterns = [
     path('mylist/<slug:slug>/search/', MovieSearchView.as_view(), name="movie_search"),
     path('mylist/<slug:slug>/delete/', MovieListDeleteView.as_view(), name="movie_list_delete"),
     path('mylist/<slug:slug>/add/', MovieAddView.as_view(), name="movie_list_add"),
-    path('mylist/<slug:slug>/<slug:slug_item>/delete_rating/', MovieDeleteView.as_view(), name="movie_delete"),
-    path('mylist/<slug:slug>/<slug:slug_item>/rating/', MovieRatingView.as_view(), name="movie_rating"),
-    path('mylist/<slug:slug>/<slug:slug_item>/update_rating/', MovieRatingUpdateView.as_view(), name="movie_update_rating"),
+    path('mylist/<slug:slug>/delete_rating/<int:pk>/', MovieDeleteView.as_view(), name="movie_delete"),
+    path('mylist/<slug:slug>/rating/<int:pk>/', MovieRatingView.as_view(), name="movie_rating"),
+    path('mylist/<slug:slug>/update_rating/<int:pk>/', MovieRatingUpdateView.as_view(), name="movie_update_rating"),
     
 ]
 
