@@ -9,6 +9,9 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from itertools import chain
 from django.db.models import Count, Avg
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from django.core.exceptions import ValidationError
 
 from .models import MovieList, MovieListItem, MovieRating
 
@@ -18,7 +21,6 @@ class HomepageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         results = MovieRating.objects.values('imdb_id').annotate(avg_rating=Avg('rating')).order_by('-avg_rating')
-        print(results)
         top_movies = []
         for item in results[:3]:
             movie = MovieListItem.objects.filter(imdb_id = item["imdb_id"]).first()
@@ -31,7 +33,7 @@ class PublicMovieListView(ListView):
     template_name = "movies/movie_list.html"
     model = MovieList
 
-class UserMovieListView(ListView):
+class UserMovieListView(LoginRequiredMixin, ListView):
     template_name = "movies/user_movie_list.html"
     model = MovieList
 
@@ -39,8 +41,8 @@ class UserMovieListView(ListView):
         qs = super().get_queryset()
         return qs.filter(user=self.request.user) # show only current users list 
 
-class MovieListCreateView(CreateView):
-    template_name = "movies/create_movie_list.html"
+class MovieListCreateView(LoginRequiredMixin, CreateView):
+    template_name = "movies/movie_list_create.html"
     model = MovieList
     fields = ['title', 'description']
 
@@ -50,10 +52,13 @@ class MovieListCreateView(CreateView):
     def form_valid(self, form):
         movie_list = form.save(commit=False)
         movie_list.user = self.request.user
+        # if MovieList.objects.get(slug = movie_list.slug).exists():
+        #     form.add_error('title', ValidationError("List name already exists!"))
+        #     return super().form_invalid(form)
         movie_list.save()
         return super(MovieListCreateView, self).form_valid(form)
 
-class MovieListDetailView(ListView):
+class MovieListDetailView(LoginRequiredMixin, ListView):
     template_name = "movies/movie_list_detail.html"
     model = MovieListItem
 
@@ -62,7 +67,6 @@ class MovieListDetailView(ListView):
         
         return queryset
         
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['movielist'] = MovieList.objects.get(slug=self.kwargs['slug']) # used for showing the list title in the listview
@@ -77,7 +81,7 @@ class MovieListDetailView(ListView):
 
         return context
 
-class MovieSearchView(TemplateView):
+class MovieSearchView(LoginRequiredMixin, TemplateView):
     template_name = "movies/movie_search.html"
     model = MovieList
 
@@ -90,7 +94,7 @@ class MovieSearchView(TemplateView):
         return context
 
 
-class MovieListDeleteView(DeleteView):
+class MovieListDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "movies/movie_list_delete.html"
     model = MovieList
 
@@ -104,7 +108,7 @@ class MovieListDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         return super(MovieListDeleteView, self).delete(request, *args, **kwargs)
 
-class MovieAddView(RedirectView):
+class MovieAddView(LoginRequiredMixin, RedirectView):
     
     def get_redirect_url(self, *args, **kwargs):
 
@@ -118,7 +122,7 @@ class MovieAddView(RedirectView):
 
         return reverse_lazy('movie_list_detail', kwargs = {'slug': self.kwargs['slug']})
 
-class MovieRatingView(CreateView):
+class MovieRatingView(LoginRequiredMixin, CreateView):
     template_name = "movies/movie_rating_create_update.html"
     model = MovieRating
     fields=['rating']
@@ -134,7 +138,7 @@ class MovieRatingView(CreateView):
         movie_rating.save()
         return super(MovieRatingView, self).form_valid(form)
         
-class MovieRatingUpdateView(UpdateView):
+class MovieRatingUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "movies/movie_rating_create_update.html"
     model = MovieRating
     fields=['rating']
@@ -146,8 +150,7 @@ class MovieRatingUpdateView(UpdateView):
         imdbID = self.request.GET.get('imdb_id')
         return get_object_or_404(MovieRating, imdb_id = imdbID)
 
-
-class MovieDeleteView(DeleteView):
+class MovieDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "movies/movie_delete.html"
     model = MovieListItem
 

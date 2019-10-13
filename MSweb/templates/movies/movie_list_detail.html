@@ -17,10 +17,10 @@
             </div>
             <div class="row">
                 {% for movie in object_list %}
-                <div class="col s4">
+                <div class="col l4 s8 offset-s2">
                     <div class="row">
                         <div class="col s12">
-                            <div class="card" style="height: 32rem;">
+                            <div class="card" style="height: 35rem;">
                                 <div class="card-image">
                                     <img height="200" src="{{movie.poster}}" alt="">
                                     <a href="{% url 'movie_delete' slug=movielist.slug pk=movie.pk %}" class="btn-floating btn-small halfway-fab deep-orange"><i class="material-icons">clear</i></a>
