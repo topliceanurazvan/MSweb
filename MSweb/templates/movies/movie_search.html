@@ -30,7 +30,7 @@
                                         <a href="https://www.imdb.com/title/{{item.imdb_id}}"><img height="250" src="{% static 'img/img_not_found.png' %}" alt=""></a>
                                     {% endif %}
                                     {% if item.exists %}
-                                        <p>Movie is already in the list.</p>
+                                        <p class="center">Movie is already in the list.</p>
                                     {% else %}
                                         <a href="{% url 'movie_list_add' slug=slug %}?imdb_id={{ item.imdb_id }}" class="btn-floating btn-small halfway-fab deep-orange"><i class="material-icons">add</i></a>
                                     {% endif %}

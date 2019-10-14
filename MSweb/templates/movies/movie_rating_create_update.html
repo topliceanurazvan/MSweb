@@ -19,7 +19,7 @@
                             {{ form.rating }}
                             <label for="{{ form.rating.id_for_label }}">Rating</label>
                         </div>
-                        {% for error in form.name.errors %}
+                        {% for error in form.rating.errors %}
                             <span class="left red-text" >* {{ error }}</span>
                         {% endfor %}
                     </div>

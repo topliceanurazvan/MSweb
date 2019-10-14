@@ -112,9 +112,10 @@ class MovieSearchView(LoginRequiredMixin, TemplateView):
         omdb_result = omdb.search(title)
 
         for item in omdb_result:
-            item.exists = MovieListItem.objects.filter(
+            item['exists'] = MovieListItem.objects.filter(
                 movie_list__user=self.request.user,
-                imdb_id=item.imdb_id
+                imdb_id=item['imdb_id'],
+                movie_list__slug=self.kwargs['slug']
             ).exists()
 
         context['omdb'] = omdb_result
@@ -143,10 +144,7 @@ class MovieAddView(LoginRequiredMixin, RedirectView):
         omdbItem = dict()
         omdbItem = omdb.imdbid(imdbID)
         movie_list = MovieList.objects.get(slug=self.kwargs['slug'])
-
-        for m in MovieListItem.objects.all():
-            if imdbID == m.imdb_id:
-                return reverse_lazy('movie_search', kwargs = {'slug': self.kwargs['slug']})
+        
         item = MovieListItem(movie_list=movie_list, movie_title=omdbItem['title'], imdb_id=imdbID, poster=omdbItem['poster'], plot=omdbItem['plot'])
         item.save();
 
