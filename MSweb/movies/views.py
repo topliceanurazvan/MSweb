@@ -52,11 +52,29 @@ class MovieListCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         movie_list = form.save(commit=False)
         movie_list.user = self.request.user
-        # if MovieList.objects.get(slug = movie_list.slug).exists():
-        #     form.add_error('title', ValidationError("List name already exists!"))
-        #     return super().form_invalid(form)
-        movie_list.save()
-        return super(MovieListCreateView, self).form_valid(form)
+        title = form.cleaned_data.get('title')
+        for m in MovieList.objects.all():
+            if title == m.title:
+                form.add_error('title', ValidationError("List name already exists!"))
+                return super().form_invalid(form)
+        return super().form_valid(form)
+
+class MovieListUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = "movies/movie_list_create.html"
+    model = MovieList
+    fields = ['title', 'description']
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('user_movie_list')
+    
+    def form_valid(self, form):
+        movie_list = form.save(commit=False)
+        title = form.cleaned_data.get('title')
+        for m in MovieList.objects.all():
+            if title == m.title:
+                form.add_error('title', ValidationError("List name already exists!"))
+                return super().form_invalid(form)
+        return super().form_valid(form)
 
 class MovieListDetailView(LoginRequiredMixin, ListView):
     template_name = "movies/movie_list_detail.html"
@@ -93,7 +111,6 @@ class MovieSearchView(LoginRequiredMixin, TemplateView):
         context['omdb'] = omdb.search(title)
         return context
 
-
 class MovieListDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "movies/movie_list_delete.html"
     model = MovieList
@@ -117,6 +134,9 @@ class MovieAddView(LoginRequiredMixin, RedirectView):
         omdbItem = omdb.imdbid(imdbID)
         movie_list = MovieList.objects.get(slug=self.kwargs['slug'])
 
+        for m in MovieListItem.objects.all():
+            if imdbID == m.imdb_id:
+                return reverse_lazy('movie_search', kwargs = {'slug': self.kwargs['slug']})
         item = MovieListItem(movie_list=movie_list, movie_title=omdbItem['title'], imdb_id=imdbID, poster=omdbItem['poster'], plot=omdbItem['plot'])
         item.save();
 

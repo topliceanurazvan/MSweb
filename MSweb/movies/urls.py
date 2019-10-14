@@ -3,8 +3,7 @@ from django.conf import settings
 from . import views
 from django.contrib.auth.views import LogoutView
 
-from .views import  (PublicMovieListView, 
-                    MovieListCreateView, 
+from .views import  (MovieListCreateView, 
                     MovieListDetailView, 
                     HomepageView,
                     UserMovieListView,
@@ -13,14 +12,16 @@ from .views import  (PublicMovieListView,
                     MovieAddView,
                     MovieRatingView,
                     MovieRatingUpdateView,
-                    MovieDeleteView)
+                    MovieDeleteView,
+                    MovieListUpdateView)
 
 urlpatterns = [
     path('', HomepageView.as_view(), name="home"),
-    path('list/', PublicMovieListView.as_view(), name="public_movie_list"),
+    # path('list/', PublicMovieListView.as_view(), name="public_movie_list"),
 
     path('mylist/', UserMovieListView.as_view(), name="user_movie_list"),
     path('mylist/create/', MovieListCreateView.as_view(), name="movie_list_create"),
+    path('mylist/<slug:slug>/update/', MovieListUpdateView.as_view(), name="movie_list_update"),
     path('mylist/<slug:slug>/', MovieListDetailView.as_view(), name="movie_list_detail"),
     path('mylist/<slug:slug>/search/', MovieSearchView.as_view(), name="movie_search"),
     path('mylist/<slug:slug>/delete/', MovieListDeleteView.as_view(), name="movie_list_delete"),

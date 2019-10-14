@@ -1,7 +1,6 @@
 {% extends "base/navbar_common.html" %}
 
 {% block buttons %}
-  <li><a href="{% url 'public_movie_list' %}"><i class="material-icons left">assignment</i>Public list</a></li>
   <li><a href="{% url 'user_movie_list' %}"><i class="material-icons left">assignment_ind</i>My list</a></li>
   <li><a href="{% url 'account_logout' %}"><i class="material-icons left">exit_to_app</i>Sign out</a></li>
 {% endblock buttons %}

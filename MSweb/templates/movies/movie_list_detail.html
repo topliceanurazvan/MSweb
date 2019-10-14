@@ -2,9 +2,7 @@
 
 {% load static %}
 
-{% block title %}
-    {{ movielist.title }}
-{% endblock title %}
+{% block title %}{{ movielist.title }}{% endblock title %}
 
 {% block content %}
     <div class="section">
@@ -33,7 +31,7 @@
                                             {% if movie.rating == None %}
                                                 <a href="{% url 'movie_rating' slug=movielist.slug pk=movie.pk %}?imdb_id={{movie.imdb_id}}" class="btn btn-small deep-orange darken-4">Give a rating</a>
                                             {% else %}
-                                                <p>Rating: {{ movie.rating }} <a href="{% url 'movie_update_rating' slug=movielist.slug pk=movie.pk %}?imdb_id={{movie.imdb_id}}"><i class="material-icons">edit</i></a>  
+                                                <p>Rating: {{ movie.rating|floatformat:1 }} <a href="{% url 'movie_update_rating' slug=movielist.slug pk=movie.pk %}?imdb_id={{movie.imdb_id}}"><i class="material-icons green-text">edit</i></a>  
                                             {% endif %}
                                         </div>
                                     </div>

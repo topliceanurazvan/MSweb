@@ -2,37 +2,27 @@
 
 {% load static %}
 
-{% block title %}
-Lista de filme
-{% endblock title %}
+{% block title %}MSweb{% endblock title %}
 
 {% block content %}
     <div class="row" style="height: 10vh; margin-bottom: 4rem; ">
         <div class="col s12 center-align fs-title" style="margin-top: 5rem; font-size: 2rem;">Top 3 movies this week</div>
     </div>
-    <div style="height: 76vh;">
-            <div class="row center" >
-                {% for movie in top_movies %}
-                    <div class="col l4 s12">
-                        <img src="{{movie.poster}}">
-                        <div class="row">
-                            <div class="col s12" style="font-size: 1.5rem;">{{movie.movie_title}}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12">Rating: {{movie.rating}}</div>
-                        </div>
+    <div style="height: 72vh;">
+        <div class="row center" >
+            {% for movie in top_movies %}
+                <div class="col l4 s12">
+                    <img height="450" src="{{movie.poster}}">
+                    <div class="row">
+                        <div class="col s12" style="font-size: 1.5rem;">{{movie.movie_title}}</div>
                     </div>
-                {% endfor %}
+                    <div class="row">
+                        <div class="col s12">Rating: {{movie.rating|floatformat:1}}</div>
+                    </div>
                 </div>
+            {% endfor %}
             </div>
+        </div>
     </div>
-    <!-- <a href="{% url 'movie_list_create' %}">Add movie to list</a>
-
-    {% for movie in object_list %}
-    
-        <a href="{% url 'movie_list_detail' slug=movie.slug %}"><h2> {{ movie.title }} </h2></a>
-        <h3> {{ movie.category }} </h3>
-
-    {% endfor %} -->
 
 {% endblock content %}

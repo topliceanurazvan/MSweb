@@ -19,14 +19,13 @@
                 <p class="red-text">* {{ error }}</p>
             {% endfor %}
         {% endif %}
-        <!-- TODO : Fix to display an error when you enter the same name again-->
 
         <div class="row">
             <div class="input-field col s12">
                 {{ form.title }}
                 <label for="{{ form.title.id_for_label }}">Event name</label>
             </div>
-            {% for error in form.name.errors %}
+            {% for error in form.title.errors %}
                 <span class="left red-text" >* {{ error }}</span>
             {% endfor %}
         </div>
