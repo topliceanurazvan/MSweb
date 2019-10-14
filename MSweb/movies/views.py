@@ -108,7 +108,17 @@ class MovieSearchView(LoginRequiredMixin, TemplateView):
         title = self.request.GET.get('movie_title')
         context['slug'] = self.kwargs['slug']
         context['title'] = title
-        context['omdb'] = omdb.search(title)
+
+        omdb_result = omdb.search(title)
+
+        for item in omdb_result:
+            item.exists = MovieListItem.objects.filter(
+                movie_list__user=self.request.user,
+                imdb_id=item.imdb_id
+            ).exists()
+
+        context['omdb'] = omdb_result
+
         return context
 
 class MovieListDeleteView(LoginRequiredMixin, DeleteView):
